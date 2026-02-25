@@ -12,8 +12,7 @@ def featureExtractor(x):  # phi(x)
     phi = defaultdict(float)
     tokens = x.split()
     left, entity, right = tokens[0], " ".join(tokens[1:-1]), tokens[-1]
-    entity_tokens = entity.split()  # BUG FIX 1: was entity.split (missing parentheses)
-
+    entity_tokens = entity.split()  
     # given features
     phi['entity is ' + entity] = 1
     phi['left is ' + left] = 1
@@ -29,7 +28,7 @@ def featureExtractor(x):  # phi(x)
         for n in [2, 3, 4]:
             if len(w) >= n:
                 phi['pre{}:{}'.format(n, w[:n])] = 1
-                phi['suf{}:{}'.format(n, w[-n:])] = 1  # BUG FIX 2: was w[:n] (prefix not suffix)
+                phi['suf{}:{}'.format(n, w[-n:])] = 1  
 
     # capitalisation
     phi['all_caps'] = float(all(w.isupper() for w in entity_tokens))
@@ -37,7 +36,7 @@ def featureExtractor(x):  # phi(x)
         all(w[0].isupper() and (len(w) < 2 or not w[1:].isupper())
             for w in entity_tokens)
     )
-    phi['first_cap'] = float(entity_tokens[0][0].isupper())  # BUG FIX 4: was first_caps
+    phi['first_cap'] = float(entity_tokens[0][0].isupper())  
     phi['starts_lower'] = float(entity_tokens[0][0].islower())
 
     # initial patterns
@@ -54,7 +53,7 @@ def featureExtractor(x):  # phi(x)
     phi['4plus_words'] = float(n_words >= 4)
 
     # non-name characters
-    phi['has_digit'] = float(any(c.isdigit() for c in entity))  # BUG FIX 3: was c.isdigit (missing parentheses)
+    phi['has_digit'] = float(any(c.isdigit() for c in entity))  
     phi['has_hyphen'] = float('-' in entity)
     phi['all_alpha'] = float(all(c.isalpha() or c.isspace() for c in entity))
     phi['has_date'] = float(bool(re.search(r'\d{4}-\d{2}-\d{2}', entity)))
